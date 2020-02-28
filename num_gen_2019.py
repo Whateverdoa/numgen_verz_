@@ -87,6 +87,11 @@ belijst = [
     [f"{begin:>{vlg}{posities}};{(begin + aantal_per_rol -1):>{vlg}{posities}}"] for begin in begin_nummer_lijst
 ]
 
+sumlijst = [
+    [f"{prefix}{begin:>{vlg}{posities}}{postfix};{prefix}{(begin + aantal_per_rol -1):>{vlg}{posities}}{postfix}"] for begin in begin_nummer_lijst
+]
+
+
 print(mes)
 aantal_rollen = len(begin_nummer_lijst)
 combinaties = aantal_rollen // mes

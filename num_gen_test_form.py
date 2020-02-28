@@ -10,6 +10,8 @@ layout = [
 
             [sg.Text('Nummer generator 2.0', text_color="Yellow")],
             [sg.Text('Ordernummer', size=(15, 1)), sg.InputText(key="order_number")],
+
+
             [sg.Text()],
             [sg.CalendarButton("Datum")],
             [sg.Text()],
@@ -21,17 +23,26 @@ layout = [
 
             [sg.Text('Y_waarde', size=(15, 1)), sg.InputText(key="Y_waarde")],
             [sg.Text('Wikkel', size=(15, 1)), sg.InputText(key="wikkel")],
-            [sg.Text('n * nummer', size=(15, 1)), sg.InputText(key="veelvoud")],
+            [sg.Text('prefix', size=(15, 1)), sg.InputText(key="prefix")],
+            [sg.Text('postfix', size=(15, 1)), sg.InputText(key="postfix")],
 
 
 
-            [sg.Button("Ok"), sg.Cancel()]
+
+            [sg.Button("Ok"), sg.Cancel()],
+
+        [sg.Text('_' * 80)],
+        [sg.Text('SAVE of LOAD inputform', size=(35, 1))],
+        [sg.Text('Your Folder', size=(15, 1), justification='right'),
+         sg.InputText('Default Folder', key='folder'), sg.FolderBrowse()],
+        [sg.Button('Exit'),
+         sg.Text(' ' * 40), sg.Button('SaveSettings'), sg.Button('LoadSettings')]
             ]      
 
 window = sg.Window('Nummer Generator test form').Layout(layout)
 button, values = window.Read() 
 
-print(button, values["order_number"], values["veelvoud"], values["posities"])
+print(button, values["order_number"], values["begin_nummer"], values["posities"])
 
 print(type(int(values["order_number"])))
 # aantallen = int(values[0])
