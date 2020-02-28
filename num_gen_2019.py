@@ -1,25 +1,27 @@
 import pandas as pd
 import os
 
-# build GUI
+# todo build GUI
+# todo rol in sluit zie pr lb
+
 
 date = "2019-11-29"  # @param {type: "date"}
-ordernummer = "202005960"  # @param {type: "string"}
+ordernummer = "202007844"  # @param {type: "string"}
 # nummering= True  #@param {type: "boolean"}
 # Soort_VDP = "Nummers"  #@param ['Nummers', 'Pdf_beelden']
 
-totaal = 50000  # @param {type: "number"}
-aantal_per_rol = 2500  # @param {type: "number"}
+totaal = 199500  # @param {type: "number"}
+aantal_per_rol = 5700  # @param {type: "number"}
 mes = 5  # @param {type: "number"}
-begin_nummer = 1600001  # @param {type: "number"}
-posities = 7  # @param {type: "number"}
+begin_nummer = 2001  # @param {type: "number"}
+posities = 11  # @param {type: "number"}
 vlg = 0  # @param {type: "number"}
-formaat_hoogte = 130  # @param {type: "number"}
-formaat_breedte = 50  # @param {type: "number"}
-wikkel = 12  # @param {type: "number"}
-etikettenY = 7
-postfix = 'MG'
-prefix= ''
+formaat_hoogte = 59  # @param {type: "number"}
+formaat_breedte = 18  # @param {type: "number"}
+wikkel = 26  # @param {type: "number"}
+etikettenY = 46
+postfix = ''
+prefix= '3SIME'
 
 inloop = etikettenY * 10 - etikettenY
 
@@ -95,7 +97,7 @@ print(f"aantal lege banen = {aantal_rollen%mes}")
 def df_csv_rol_builder(begin_nummer_uit_lijst, posities, vlg, aantal_per_rol, wikkel):
 
     rol = [
-        (f"{getal:>{vlg}{posities}}{postfix}", "", "leeg.pdf")
+        (f"{prefix}{getal:>{vlg}{posities}}{postfix}", "", "leeg.pdf")
         for getal in range(
             begin_nummer_uit_lijst, (begin_nummer_uit_lijst + aantal_per_rol)
         )
