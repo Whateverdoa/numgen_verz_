@@ -1,27 +1,29 @@
 import pandas as pd
 import os
+from pathlib import Path
+import mes_wikkel as mes_wik
 
 # todo build GUI
 # todo rol in sluit zie pr lb
 
 
-date = "2019-11-29"  # @param {type: "date"}
-ordernummer = "202007844"  # @param {type: "string"}
+date = "2020-3-3"  # @param {type: "date"}
+ordernummer = "202007992"  # @param {type: "string"}
 # nummering= True  #@param {type: "boolean"}
 # Soort_VDP = "Nummers"  #@param ['Nummers', 'Pdf_beelden']
 
-totaal = 199500  # @param {type: "number"}
-aantal_per_rol = 5700  # @param {type: "number"}
-mes = 5  # @param {type: "number"}
-begin_nummer = 2001  # @param {type: "number"}
-posities = 11  # @param {type: "number"}
+totaal = 5250  # @param {type: "number"}
+aantal_per_rol = 250  # @param {type: "number"}
+mes = 3  # @param {type: "number"}
+begin_nummer = 6002280980  # @param {type: "number"}
+posities = 10  # @param {type: "number"}
 vlg = 0  # @param {type: "number"}
-formaat_hoogte = 59  # @param {type: "number"}
-formaat_breedte = 18  # @param {type: "number"}
-wikkel = 26  # @param {type: "number"}
-etikettenY = 46
+formaat_hoogte = 100  # @param {type: "number"}
+formaat_breedte = 150  # @param {type: "number"}
+wikkel = 4  # @param {type: "number"}
+etikettenY = 6
 postfix = ''
-prefix= '3SIME'
+prefix= ''
 
 inloop = etikettenY * 10 - etikettenY
 
@@ -29,7 +31,7 @@ inloop = etikettenY * 10 - etikettenY
 # 22500681000
 
 path = "tmp/"
-path_vdp = "VDP_map/"
+path_vdp = "VDP_map"
 path_final = "VDP_final"
 try:
     os.mkdir(path_final)
@@ -178,6 +180,81 @@ for combinatie in range(combinaties):
 
 print(len(combinatie_binnen_mes) * mes)
 
+def mes_3(lissst, ordernum):
+    """builds  and concats 4 files over axis 1
+    mes waarde toevoegen en list comporhension
+
+    """
+    stapel = []
+    for index in range((len(lissst))):
+        print(index)
+        a = lissst[index][0]
+        b = lissst[index][1]
+        c = lissst[index][2]
+
+
+        color_1 = f"Baan_{index + 1:>{0}{3}}"
+        color_2 = f"{index}b"
+
+        file_1 = pd.read_csv(f"{path}{a}", ",", dtype="str")
+        file_2 = pd.read_csv(f"{path}{b}", ",", dtype="str")
+
+        file_3 = pd.read_csv(f"{path}{c}", ",", dtype="str")
+
+
+        combinatie_samenvoegen = pd.concat([file_1, file_2, file_3], axis=1)
+
+        combinatie_samenvoegen.columns = [
+            "num_1",
+            "omschrijving_1",
+            "pdf_1",
+            "num_2",
+            "omschrijving_2",
+            "pdf_2",
+            "num_3",
+            "omschrijving_3",
+            "pdf_3",
+
+        ]
+        # kolomnamen_samenvoegen = (";").join([f"'omschrijving_{num}','pdf_{num}'" for num in range(1,mes+1)])
+
+        # samengevoeg_3.fillna({'pdf_1':"stans.pdf",'pdf_2':"stans.pdf",'pdf_3':"stans.pdf"}, inplace=True)
+
+        combinatie_samenvoegen.to_csv(
+            f"{path_vdp}/{ordernummer}_{color_1}nieuw.csv", ";", encoding="utf-8"
+        )
+
+def wikkel_3_baans_tc(input_vdp_lijst):
+    """last step voor VDP adding in en uitloop"""
+
+    for index in range(len(input_vdp_lijst)):
+        file_naam = f"{input_vdp_lijst[index]}"
+
+        with open(f"{path_final}/{file_naam}", "r", encoding="utf-8") as target:
+            readline = target.readlines()
+
+        with open(f"{path_final}/def_{file_naam}", "w", encoding="utf-8") as target:
+            target.writelines(
+                "id;num_1;omschrijving_1;pdf_1;num_2;omschrijving_2;pdf_2;num_3;omschrijving_3;pdf_3\n"
+            )
+            # regel staat zo omdat ik kolomnaam id nog niet erin krijg
+            target.writelines(readline[1:etikettenY+1])
+            # target.writelines(readline[16:(etikettenY+etikettenY-8)])
+
+            target.writelines(
+                "0;0;;stans.pdf;0;;stans.pdf;0;;stans.pdf\n"
+                * inloop
+            )  # inloop
+
+            target.writelines(readline[1:])  # bestand
+
+            target.writelines(
+                "0;0;;stans.pdf;0;;stans.pdf;0;;stans.pdf\n"
+                * inloop
+            )  # uitloop
+
+            target.writelines(readline[-etikettenY:])
+
 
 def mes_4(lissst, ordernum):
     """builds  and concats 4 files over axis 1
@@ -231,7 +308,7 @@ def wikkel_4_baans_tc(input_vdp_lijst):
     for index in range(len(input_vdp_lijst)):
         file_naam = f"{input_vdp_lijst[index]}"
 
-        with open(f"{path_vdp}/{file_naam}", "r", encoding="utf-8") as target:
+        with open(f"{path_final}/{file_naam}", "r", encoding="utf-8") as target:
             readline = target.readlines()
 
         with open(f"{path_final}/def_{file_naam}", "w", encoding="utf-8") as target:
@@ -419,6 +496,10 @@ def stapel_df_baan(lijstin, ordernummer):
 if mes == 4:
     mes_4(combinatie_binnen_mes, ordernummer)
 
+    combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+    # print(combinatie)
+    stapel_df_baan(combinatie, ordernummer)
+
     VDP_final = [x for x in os.listdir(path_vdp) if x.endswith(".csv")]
     # print(VDP_final)
     wikkel_4_baans_tc(VDP_final)
@@ -435,6 +516,21 @@ elif mes == 5:
     wikkel_5_baans_tc(VDP_final)
 
 elif mes == 6:
-    mes_6(combinatie_binnen_mes, ordernummer)
+    print("mes$ not ready")
+    # mes_6(combinatie_binnen_mes, ordernummer)
+
+
+elif mes ==3:
+    mes_3(combinatie_binnen_mes, ordernummer)
+
+    combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+    print(combinatie)
+
+    stapel_df_baan(combinatie, ordernummer)
+
+    VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+
+    wikkel_3_baans_tc(VDP_final)
+
 
 
