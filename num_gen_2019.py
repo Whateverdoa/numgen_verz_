@@ -7,21 +7,21 @@ import mes_wikkel as mes_wik
 # todo rol in sluit zie pr lb
 
 
-date = "2020-3-3"  # @param {type: "date"}
-ordernummer = "202007992"  # @param {type: "string"}
+date = "2020-6-3"  # @param {type: "date"}
+ordernummer = "202008793"  # @param {type: "string"}
 # nummering= True  #@param {type: "boolean"}
 # Soort_VDP = "Nummers"  #@param ['Nummers', 'Pdf_beelden']
 
-totaal = 5250  # @param {type: "number"}
-aantal_per_rol = 250  # @param {type: "number"}
-mes = 3  # @param {type: "number"}
-begin_nummer = 6002280980  # @param {type: "number"}
-posities = 10  # @param {type: "number"}
+totaal = 288000  # @param {type: "number"}
+aantal_per_rol = 500  # @param {type: "number"}
+mes = 4  # @param {type: "number"}
+begin_nummer = 157500 # @param {type: "number"}
+posities = 6 # @param {type: "number"}
 vlg = 0  # @param {type: "number"}
-formaat_hoogte = 100  # @param {type: "number"}
-formaat_breedte = 150  # @param {type: "number"}
-wikkel = 4  # @param {type: "number"}
-etikettenY = 6
+formaat_hoogte = 70  # @param {type: "number"}
+formaat_breedte = 40  # @param {type: "number"}
+wikkel = 8  # @param {type: "number"} wikkel formule
+etikettenY = 22
 postfix = ''
 prefix= ''
 
@@ -74,11 +74,15 @@ for file in VDP_final:
 # ___________________________________________________________________________________
 
 
-# tuple maken met rolnummer?
+# tuple maken met rolnummer? dictionairy?
 
 begin_nummer_lijst = [
     begin for begin in range(begin_nummer, begin_nummer + totaal - 1, aantal_per_rol)
 ]
+
+rol_nummer_lijst  = [f'Rol {num:>{0}{3}}' for num in range(1,len(begin_nummer_lijst)+1)]
+
+
 # print(begin_nummer_lijst)
 begin_eind_nummer_lijst = [
     [begin, begin + aantal_per_rol - 1] for begin in begin_nummer_lijst
@@ -100,6 +104,8 @@ combinaties = aantal_rollen // mes
 
 print(f"aantal lege banen = {aantal_rollen%mes}")
 
+
+#todo zet extra argument in voor rollen
 
 def df_csv_rol_builder(begin_nummer_uit_lijst, posities, vlg, aantal_per_rol, wikkel):
 
@@ -299,7 +305,7 @@ def mes_4(lissst, ordernum):
         # samengevoeg_3.fillna({'pdf_1':"stans.pdf",'pdf_2':"stans.pdf",'pdf_3':"stans.pdf"}, inplace=True)
 
         combinatie_samenvoegen.to_csv(
-            f"{path_vdp}{ordernummer}_{color_1}nieuw.csv", ";", encoding="utf-8"
+            f"{path_vdp}/{ordernummer}_{color_1}nieuw.csv", ";", encoding="utf-8"
         )
 
 def wikkel_4_baans_tc(input_vdp_lijst):
@@ -384,7 +390,7 @@ def mes_5(lissst, ordernum):
         # samengevoeg_3.fillna({'pdf_1':"stans.pdf",'pdf_2':"stans.pdf",'pdf_3':"stans.pdf"}, inplace=True)
 
         combinatie_samenvoegen.to_csv(
-            f"{path_vdp}{ordernummer}_{color_1}.csv", ";", encoding="utf-8"
+            f"{path_vdp}/{ordernummer}_{color_1}.csv", ";", encoding="utf-8"
         )
 
 
@@ -485,7 +491,7 @@ def stapel_df_baan(lijstin, ordernummer):
     for index in range(len(lijstin)):
         print(lijstin[index])
         to_append_df = pd.read_csv(
-            f"{path_vdp}{lijstin[index]}", ";", dtype="str", index_col=0
+            f"{path_vdp}/{lijstin[index]}", ";", dtype="str", index_col=0
         )
         stapel_df.append(to_append_df)
     pd.concat(stapel_df, axis=0).to_csv(f"{path_final}/VDP_{ordernummer}.csv", ";")
@@ -500,7 +506,7 @@ if mes == 4:
     # print(combinatie)
     stapel_df_baan(combinatie, ordernummer)
 
-    VDP_final = [x for x in os.listdir(path_vdp) if x.endswith(".csv")]
+    VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
     # print(VDP_final)
     wikkel_4_baans_tc(VDP_final)
 

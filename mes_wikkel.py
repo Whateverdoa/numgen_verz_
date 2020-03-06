@@ -2,6 +2,16 @@ import pandas as pd
 import os
 from paden import *
 
+def lijstmaker(begin_nummer, totaal, aantal_per_rol):
+    begin_nummer_lijst = [
+        begin for begin in range(begin_nummer, begin_nummer + totaal - 1, aantal_per_rol)
+    ]
+    return begin_nummer_lijst
+
+def rol_nummer_lijst(lijst):
+    rol_nummers = [f'Rol {num:>{0}{3}}' for num in range(1,len(lijst)+1)]
+    return rol_nummers
+
 
 def mes_3(lissst, ordernum):
     """builds  and concats 4 files over axis 1
@@ -18,11 +28,11 @@ def mes_3(lissst, ordernum):
         color_1 = f"Baan_{index + 1:>{0}{3}}"
         color_2 = f"{index}b"
 
-        file_1 = pd.read_csv(f"{path}/{a}", ",", dtype="str")
+        file_1 = pd.read_csv(f"{path}{a}", ",", dtype="str")
 
-        file_2 = pd.read_csv(f"{path}/{b}", ",", dtype="str")
+        file_2 = pd.read_csv(f"{path}{b}", ",", dtype="str")
 
-        file_3 = pd.read_csv(f"{path}/{c}", ",", dtype="str")
+        file_3 = pd.read_csv(f"{path}{c}", ",", dtype="str")
 
         combinatie_samenvoegen = pd.concat([file_1, file_2, file_3], axis=1)
 
@@ -77,3 +87,50 @@ def wikkel_3_baans_tc(input_vdp_lijst, etikettenY, inloop):
             )  # uitloop
 
             target.writelines(readline[-etikettenY:])
+
+
+def df_csv_rol_builder_met_rolnummer(begin_nummer_uit_lijst, posities, vlg, aantal_per_rol, wikkel, prefix, postfix, rolnummer):
+
+    rol = [
+        (f"{prefix}{getal:>{vlg}{posities}}{postfix}", "", "leeg.pdf")
+        for getal in range(
+            begin_nummer_uit_lijst, (begin_nummer_uit_lijst + aantal_per_rol)
+        )
+    ]
+    df_rol = pd.DataFrame(rol, columns=["num", "omschrijving", "pdf"])
+
+    begin = df_rol.iat[0, 0]
+    eind_positie_rol = (aantal_per_rol) - 1
+    eind = df_rol.iat[eind_positie_rol, 0]
+
+    twee_extra = pd.DataFrame(
+        [("0", "", "stans.pdf") for x in range(2)],
+        columns=["num", "omschrijving", "pdf"],
+    )
+
+    wikkel_df = pd.DataFrame(
+        [("0", "", "stans.pdf") for x in range(wikkel)],
+        columns=["num", "omschrijving", "pdf"],
+    )
+
+    sluitstuk = pd.DataFrame(
+        [["0", f"{rolnummer} {begin} t/m {eind}", "stans.pdf"]],
+        columns=["num", "omschrijving", "pdf"],
+    )
+
+    naam = f"df_{begin_nummer_uit_lijst:>{vlg}{posities}}"
+    # print(f'{naam} ____when its used to append the dataFrame in a list or dict<-----')
+    naam = pd.concat([twee_extra, sluitstuk, wikkel_df, df_rol])
+
+    return naam
+
+
+def losse_csv_rollen_builder(posities, vlg, aantal_per_rol, wikkel, begin_nummer_lijst, prefix,  postfix, lijst_rolnummer):
+    builder = [
+        df_csv_rol_builder_met_rolnummer(begin, posities, vlg, aantal_per_rol, wikkel,  prefix,  postfix, rol).to_csv(
+        f"{path}/tmp{begin:>{0}{6}}.csv", index=0
+    )
+    for begin in begin_nummer_lijst
+    ]
+    # return len(builder)
+
