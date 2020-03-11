@@ -134,3 +134,55 @@ def losse_csv_rollen_builder(posities, vlg, aantal_per_rol, wikkel, begin_nummer
     ]
     # return len(builder)
 
+def rol_num_dikt(begin,vlg, totaal, aantal_per_rol):
+    """"maak twee lijsten nummers en rolnummers voeg samen tot dikt"""
+    rollen_metbegin_nummers = {}
+
+    beginnummers = [f'{begin:>{0}{vlg}}' for begin in range(begin, begin + totaal, aantal_per_rol)]
+
+    # beginnummers
+    aantal_rollen = len(beginnummers)
+    getallenvoorrol = len(str(aantal_rollen))
+
+    # rolnummers
+    rolnummers = [f'Rol {rolnummer:>{0}{getallenvoorrol}}' for rolnummer in range(1, aantal_rollen + 1)]
+    rollen_metbegin_nummers = {rolnummers[i]: beginnummers[i] for i in range(aantal_rollen)}
+    # rollen_metbegin_nummers
+    return rollen_metbegin_nummers
+
+
+
+beginlijst=rol_num_dikt(1, 3, 1000,100)
+
+# for key in beginlijst.items():
+#     print(key[0])
+#     rol_nummer = key[0]
+#     print(key[1])
+#     beginnummer =int(key[1])
+#     df_csv_rol_builder_met_rolnummer(beginnummer,4,0,100,10,'','',rol_nummer).to_csv("testmetrolnummer.csv")
+
+posities=4
+vlg=0
+aantal_per_rol=1000
+wikkel=12
+prefix=''
+postfix=''
+
+print(path.is_dir())
+path.mkdir(parents=True, exist_ok=True)
+print(path.is_dir())
+
+
+count=0
+for key in beginlijst.items():
+
+    rol_nummer = key[0]
+    beginnummer = int(key[1])
+    filenaam= f'tmp{count:>{0}{6}}.csv'
+    df_csv_rol_builder_met_rolnummer(beginnummer, posities, vlg, aantal_per_rol, wikkel, '', '', rol_nummer).to_csv(path / filenaam, index=0)
+    count+=1
+    print(beginnummer, filenaam)
+
+
+def csv_bouwer_met_rolnummer():
+    pass
