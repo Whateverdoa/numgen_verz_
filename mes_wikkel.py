@@ -150,7 +150,7 @@ def rol_num_dikt(begin,vlg, totaal, aantal_per_rol):
     # rollen_metbegin_nummers
     return rollen_metbegin_nummers
 
-
+# todo create class!!!
 
 beginlijst=rol_num_dikt(1, 3, 1000,100)
 
