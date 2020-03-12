@@ -7,12 +7,12 @@ import mes_wikkel as mes_wik
 # todo rol in sluit zie pr lb
 
 
-date = "2020-6-3"  # @param {type: "date"}
-ordernummer = "202008793"  # @param {type: "string"}
+date = "12-3-2020"  # @param {type: "date"}
+ordernummer = "202008793_1"  # @param {type: "string"}
 # nummering= True  #@param {type: "boolean"}
 # Soort_VDP = "Nummers"  #@param ['Nummers', 'Pdf_beelden']
 
-totaal = 288000  # @param {type: "number"}
+totaal = 72000  # @param {type: "number"}
 aantal_per_rol = 500  # @param {type: "number"}
 mes = 4  # @param {type: "number"}
 begin_nummer = 157500 # @param {type: "number"}
@@ -21,9 +21,10 @@ vlg = 0  # @param {type: "number"}
 formaat_hoogte = 70  # @param {type: "number"}
 formaat_breedte = 40  # @param {type: "number"}
 wikkel = 8  # @param {type: "number"} wikkel formule
-etikettenY = 22
-postfix = ''
+etikettenY = 6
 prefix= ''
+postfix = ''
+
 
 inloop = etikettenY * 10 - etikettenY
 
@@ -171,8 +172,9 @@ df_rollen_builder = [
 
 csv_files_in_tmp = [x for x in os.listdir(path) if x.endswith(".csv")]
 sorted_files = sorted(csv_files_in_tmp)
+print(f'sortedfiles {sorted_files}')
 combinatie_binnen_mes = []
-print(combinatie_binnen_mes)
+
 print(combinaties)
 
 begin = 0
@@ -183,6 +185,7 @@ for combinatie in range(combinaties):
     begin += mes
     eind += mes
 
+print(combinatie_binnen_mes)
 
 print(len(combinatie_binnen_mes) * mes)
 

@@ -1,5 +1,6 @@
 # import PySimpleGUIWeb as sg
 import PySimpleGUI as sg
+import os
 import sys
 import mes_wikkel as mes_wik
 from paden import *
@@ -27,6 +28,7 @@ def main():
                 [sg.Text('posities', size=(15, 1)), sg.InputText(key="posities")],
                 [sg.Text('voorloop getal', size=(15, 1)), sg.InputText(key="vlg0")],
                 [sg.Text('Aantal_per_rol', size=(15, 1)), sg.InputText(key='aantal_per_rol')],
+                [sg.Text('Mes', size=(15, 1)), sg.InputText(key='mes')],
 
                 [sg.Text('Y_waarde', size=(15, 1)), sg.InputText(key="Y_waarde")],
                 [sg.Text('Wikkel', size=(15, 1)), sg.InputText(key="wikkel")],
@@ -87,6 +89,9 @@ def main():
             hoogte = int(values["hoogte"])
             prefix =values["prefix"]
             postfix = values["postfix"]
+            mes = int(values["mes"])
+
+            inloop = Y_waarde * 10 - Y_waarde
 
 
 
@@ -94,11 +99,100 @@ def main():
             # aantallen = int(values[0])
             # print(aantallen)
             # mes_wik.df_csv_rol_builder_met_rolnummer()
-            beginlijst = mes_wik.lijstmaker(begin_nummer,totaal_aantal,aantal_per_rol)
 
-            rolnummers_in_lijst = mes_wik.rol_nummer_lijst(beginlijst)
+            # ___________________________________________________________________________________
+            csvs = [x for x in os.listdir(path_vdp) if x.endswith(".csv")]
+            print(csvs)
+            for file in csvs:
+                naam = f"{path_vdp}/{file}"  # /VDP_map
+                print(naam)
+                if os.path.exists(naam):
+                    os.remove(naam)
+                else:
+                    print("empty")
 
-            mes_wik.losse_csv_rollen_builder(posities,vlg,aantal_per_rol, wikkel, beginlijst, prefix, postfix, rolnummers_in_lijst)
+            csvs = [x for x in os.listdir(path) if x.endswith(".csv")]
+            print(csvs)
+            for file in csvs:
+                naam = f"{path}/{file}"  # /tmp
+                print(naam)
+                if os.path.exists(naam):
+                    os.remove(naam)
+                else:
+                    print("empty")
+
+            VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+            print(VDP_final)
+
+            for file in VDP_final:
+                naam = f"{path_final}/{file}"
+                if os.path.exists(naam):
+                    os.remove(naam)
+                else:
+                    print("empty")
+            # _____________________________
+
+            beginlijst = mes_wik.rol_num_dikt(begin_nummer,vlg,totaal_aantal,aantal_per_rol)
+
+
+            count = 0
+            for key in beginlijst.items():
+                rol_nummer = key[0]
+                beginnummer = int(key[1])
+                filenaam = f'tmp{count:>{0}{6}}.csv'
+                padnaam = Path(path, filenaam)
+                print(padnaam)
+                mes_wik.df_csv_rol_builder_met_rolnummer(beginnummer, posities, vlg, aantal_per_rol, wikkel, '', '',
+                                                 rol_nummer).to_csv(padnaam, index=0)
+                count += 1
+                print(beginnummer, filenaam)
+
+
+
+            aantal_rollen = len(beginlijst)
+            print(f'aantal rollen {aantal_rollen}')
+            combinaties = aantal_rollen // mes
+
+            csv_files_in_tmp = [x for x in os.listdir(path) if x.endswith(".csv")]
+            print(csv_files_in_tmp)
+            sorted_files = sorted(csv_files_in_tmp)
+            print(f'sortedfiles {sorted_files}')
+
+            combinatie_binnen_mes = []
+            begin = 0
+            eind = mes
+            for combi in range(combinaties):
+                print(begin , eind)
+
+                combinatie_binnen_mes.append(sorted_files[begin:eind])
+
+                begin += mes
+                eind += mes
+
+            print(combinatie_binnen_mes)
+
+            if mes == 4:
+                mes_wik.mes_4(combinatie_binnen_mes, ordernummer)
+
+                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+                # print(combinatie)
+                mes_wik.stapel_df_baan(combinatie, ordernummer)
+
+                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+                # print(VDP_final)
+                mes_wik.wikkel_4_baans_tc(VDP_final, Y_waarde,  inloop)
+
+            elif mes == 5:
+
+                mes_wik.mes_5(combinatie_binnen_mes, ordernummer)
+
+                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+                # print(combinatie)
+                mes_wik.stapel_df_baan(combinatie, ordernummer)
+
+                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+                # print(VDP_final)
+                mes_wik.wikkel_5_baans_tc(VDP_final, Y_waarde, inloop)
 
 
     window.close()
