@@ -134,7 +134,7 @@ def main():
 
             beginlijst = mes_wik.rol_num_dikt(begin_nummer,vlg,totaal_aantal,aantal_per_rol)
 
-
+            gemaakte_posix_paden=[]
             count = 0
             for key in beginlijst.items():
                 rol_nummer = key[0]
@@ -142,11 +142,13 @@ def main():
                 filenaam = f'tmp{count:>{0}{6}}.csv'
                 padnaam = Path(path, filenaam)
                 print(padnaam)
+                gemaakte_posix_paden.append(padnaam)
                 mes_wik.df_csv_rol_builder_met_rolnummer(beginnummer, posities, vlg, aantal_per_rol, wikkel, '', '',
                                                  rol_nummer).to_csv(padnaam, index=0)
                 count += 1
                 print(beginnummer, filenaam)
 
+            print(f'posix_paden {gemaakte_posix_paden}')
 
 
             aantal_rollen = len(beginlijst)
@@ -158,6 +160,7 @@ def main():
             sorted_files = sorted(csv_files_in_tmp)
             print(f'sortedfiles {sorted_files}')
 
+            combinatie_binnen_mes_posix = []
             combinatie_binnen_mes = []
             begin = 0
             eind = mes
@@ -165,11 +168,13 @@ def main():
                 print(begin , eind)
 
                 combinatie_binnen_mes.append(sorted_files[begin:eind])
+                combinatie_binnen_mes_posix.append(gemaakte_posix_paden[begin:eind])
 
                 begin += mes
                 eind += mes
 
-            print(combinatie_binnen_mes)
+            print(f'lijst {combinatie_binnen_mes}')
+            print(f' posix per combi {combinatie_binnen_mes_posix}')
 
             if mes == 4:
                 mes_wik.mes_4(combinatie_binnen_mes, ordernummer)
