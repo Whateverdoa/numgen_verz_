@@ -8,21 +8,21 @@ import mes_wikkel as mes_wik
 
 
 date = "12-3-2020"  # @param {type: "date"}
-ordernummer = "202008793_1"  # @param {type: "string"}
+ordernummer = "202009749"  # @param {type: "string"}
 # nummering= True  #@param {type: "boolean"}
 # Soort_VDP = "Nummers"  #@param ['Nummers', 'Pdf_beelden']
 
-totaal = 72000  # @param {type: "number"}
-aantal_per_rol = 500  # @param {type: "number"}
-mes = 4  # @param {type: "number"}
-begin_nummer = 157500 # @param {type: "number"}
-posities = 6 # @param {type: "number"}
+totaal = 9000  # @param {type: "number"}
+aantal_per_rol = 1000  # @param {type: "number"}
+mes = 3  # @param {type: "number"}
+begin_nummer = 1 # @param {type: "number"}
+posities = 5 # @param {type: "number"}
 vlg = 0  # @param {type: "number"}
-formaat_hoogte = 70  # @param {type: "number"}
-formaat_breedte = 40  # @param {type: "number"}
-wikkel = 8  # @param {type: "number"} wikkel formule
+formaat_hoogte = 90  # @param {type: "number"}
+formaat_breedte = 147  # @param {type: "number"}
+wikkel = 4  # @param {type: "number"} wikkel formule
 etikettenY = 6
-prefix= ''
+prefix= 'DP2020-'
 postfix = ''
 
 
