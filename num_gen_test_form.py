@@ -95,7 +95,7 @@ def main():
 
 
 
-            print(type(int(values["order_number"])))
+            # print(type(int(values["order_number"])))
             # aantallen = int(values[0])
             # print(aantallen)
             # mes_wik.df_csv_rol_builder_met_rolnummer()
@@ -198,6 +198,19 @@ def main():
                 VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
                 # print(VDP_final)
                 mes_wik.wikkel_5_baans_tc(VDP_final, Y_waarde, inloop)
+
+
+            elif mes == 3:
+
+                mes_wik.mes_3(combinatie_binnen_mes, ordernummer)
+
+                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+                # print(combinatie)
+                mes_wik.stapel_df_baan(combinatie, ordernummer)
+
+                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+                # print(VDP_final)
+                mes_wik.wikkel_3_baans_tc(VDP_final, Y_waarde, inloop)
 
 
     window.close()

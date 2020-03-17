@@ -31,4 +31,7 @@ def paden_vernietiger(dirname):
 #
 # path.rmdir()
 
-paden_maker("mike2")
+paden_maker("VDP_final")
+
+# todo fix het paden verhaal
+# todo maak in nieuw projekt
