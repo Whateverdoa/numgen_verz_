@@ -199,6 +199,10 @@ def main():
                 # print(VDP_final)
                 mes_wik.wikkel_5_baans_tc(VDP_final, Y_waarde, inloop)
 
+            elif mes == 3:  # testing purposes
+                for posixlijst in combinatie_binnen_mes_posix:
+                    print(mes_wik.mes_algemeen(posixlijst))
+
 
     window.close()
 

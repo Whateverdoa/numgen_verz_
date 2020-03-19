@@ -365,3 +365,21 @@ def stapel_df_baan(lijstin, ordernummer):
         )
         stapel_df.append(to_append_df)
     pd.concat(stapel_df, axis=0).to_csv(f"{path_final}/VDP_{ordernummer}.csv", ";")
+
+
+def mes_algemeen(*lijst_met_posix_paden): # unpack the list using *args
+    """1 lijst in len(lijst) namen uit
+    input lijst met posix paden"""
+    print(f'{lijst_met_posix_paden} lijst_met_posix_paden')
+    count = 1
+    concatlist = []
+    for csv in lijst_met_posix_paden:
+        print(f'{csv} = csv)')
+        naam = f'file{count}'
+
+        naam = pd.read_csv(f'{csv[count-1]}')
+        concatlist.append(naam)
+
+    lijst_over_axis_1 = pd.concat(concatlist, axis=1)
+    return lijst_over_axis_1
+

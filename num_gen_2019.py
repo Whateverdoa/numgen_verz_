@@ -7,22 +7,22 @@ import mes_wikkel as mes_wik
 # todo rol in sluit zie pr lb
 
 
-date = "12-3-2020"  # @param {type: "date"}
-ordernummer = "202009749"  # @param {type: "string"}
+date = "17-03-2020"  # @param {type: "date"}
+ordernummer = "202009940"  # @param {type: "string"}
 # nummering= True  #@param {type: "boolean"}
 # Soort_VDP = "Nummers"  #@param ['Nummers', 'Pdf_beelden']
 
-totaal = 9000  # @param {type: "number"}
-aantal_per_rol = 1000  # @param {type: "number"}
+totaal = 20004  # @param {type: "number"}
+aantal_per_rol = 1667  # @param {type: "number"}
 mes = 3  # @param {type: "number"}
-begin_nummer = 1 # @param {type: "number"}
-posities = 5 # @param {type: "number"}
+begin_nummer = 221998 # @param {type: "number"}
+posities = 6 # @param {type: "number"}
 vlg = 0  # @param {type: "number"}
-formaat_hoogte = 90  # @param {type: "number"}
-formaat_breedte = 147  # @param {type: "number"}
-wikkel = 4  # @param {type: "number"} wikkel formule
-etikettenY = 6
-prefix= 'DP2020-'
+formaat_hoogte = 80  # @param {type: "number"}
+formaat_breedte = 50  # @param {type: "number"}
+wikkel = 10  # @param {type: "number"} wikkel formule
+etikettenY = 18
+prefix= 'AA'
 postfix = ''
 
 
@@ -97,7 +97,9 @@ belijst = [
 sumlijst = [
     [f"{prefix}{begin:>{vlg}{posities}}{postfix};{prefix}{(begin + aantal_per_rol -1):>{vlg}{posities}}{postfix}"] for begin in begin_nummer_lijst
 ]
+beg_eind_lijst_df = pd.DataFrame(sumlijst, dtype ="str")
 
+beg_eind_lijst_df.to_csv(f"summary/{ordernummer}_sum.csv",  index=0)
 
 print(mes)
 aantal_rollen = len(begin_nummer_lijst)
@@ -529,7 +531,7 @@ elif mes == 6:
     # mes_6(combinatie_binnen_mes, ordernummer)
 
 
-elif mes ==3:
+elif mes == 3:
     mes_3(combinatie_binnen_mes, ordernummer)
 
     combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
