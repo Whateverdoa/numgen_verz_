@@ -43,6 +43,10 @@ except OSError as error:
     print("dirs exist")
 
 # ___________________________________________________________________________________
+# old skool cleaner todo use pathlib version
+# ____________________________________________________________________________________
+
+
 csvs = [x for x in os.listdir(path_vdp) if x.endswith(".csv")]
 print(csvs)
 for file in csvs:
@@ -101,7 +105,7 @@ sumlijst = [
 
 print(mes)
 aantal_rollen = len(begin_nummer_lijst)
-combinaties = aantal_rollen // mes
+
 
 print(f"aantal lege banen = {aantal_rollen%mes}")
 
@@ -169,6 +173,9 @@ df_rollen_builder = [
     df_csv_rol_builder(begin, posities, vlg, aantal_per_rol, wikkel)
     for begin in begin_nummer_lijst
 ]
+
+
+combinaties = aantal_rollen // mes
 
 csv_files_in_tmp = [x for x in os.listdir(path) if x.endswith(".csv")]
 sorted_files = sorted(csv_files_in_tmp)
@@ -542,4 +549,4 @@ elif mes ==3:
     wikkel_3_baans_tc(VDP_final)
 
 
-
+# when done clean all supurflus files

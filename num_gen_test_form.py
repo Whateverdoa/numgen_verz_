@@ -4,8 +4,12 @@ import os
 import sys
 import mes_wikkel as mes_wik
 from paden import *
+from summary import html_sum_form_writer
 
-# Very basic window.  Return values as a list
+# Very basic window.  Return values as a dictionairy
+# todo cleaner
+# todo dynamic concatenations:)
+
 
 def main():
     sg.change_look_and_feel('Dark')
@@ -93,6 +97,20 @@ def main():
 
             inloop = Y_waarde * 10 - Y_waarde
 
+            # use a dict to specify the summeary output or use dict values
+            keywargs = {"Ordernummer: ": ordernummer,
+
+                        "Aantal VDP's": 1,
+                        "Totaal aantal ": str(f'{totaal_aantal:,} etiketten').replace(",", "."),
+                        # 'Aantal Rollen': f'{aantal_rollen} rol(len) van {aantal_per_rol}',
+                        # "Rol_nummers": f'Rol_{begin_rolnummer + 1} t/m Rol_{begin_rolnummer + aantal_rollen}',
+                        "Mes ": mes,
+                        # 'Mes x combinaties ': f'{mes} van {combinaties} banen',
+                        "Wikkel": f'{wikkel} etiketten',
+
+                        'Inloop en uitloop': f'{Y_waarde} x 10 sheets =({inloop})'}
+            # todo output in html
+            html_sum_form_writer(titel=f'summary_{ordernummer}', **values, **keywargs)
 
 
             # print(type(int(values["order_number"])))

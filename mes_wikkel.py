@@ -143,9 +143,16 @@ def df_csv_rol_builder_met_rolnummer(begin_nummer_uit_lijst, posities, vlg, aant
     return naam
 
 
-def losse_csv_rollen_builder(posities, vlg, aantal_per_rol, wikkel, begin_nummer_lijst, prefix,  postfix, lijst_rolnummer):
+def losse_csv_rollen_builder(posities,
+                             vlg,
+                             aantal_per_rol,
+                             wikkel,
+                             begin_nummer_lijst,
+                             prefix,
+                             postfix,
+                             lijst_rolnummer):
     builder = [
-        df_csv_rol_builder_met_rolnummer(begin, posities, vlg, aantal_per_rol, wikkel,  prefix,  postfix, rol).to_csv(
+        df_csv_rol_builder_met_rolnummer(begin, posities, vlg, aantal_per_rol, wikkel,  prefix,  postfix, lijst_rolnummer).to_csv(
         f"{path}/tmp{begin:>{0}{6}}.csv", index=0
     )
     for begin in begin_nummer_lijst
@@ -385,5 +392,7 @@ def stapel_df_baan(lijstin, ordernummer):
 
 def csv_bouwer_met_rolnummer():
     pass
+
+
 
 
