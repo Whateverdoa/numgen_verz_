@@ -1,10 +1,13 @@
 # import PySimpleGUIWeb as sg
 import PySimpleGUI as sg
 import os
+import pandas as pd
 import sys
 import mes_wikkel as mes_wik
 from paden import *
 from summary import html_sum_form_writer
+
+
 
 # Very basic window.  Return values as a dictionairy
 # todo cleaner
@@ -15,43 +18,37 @@ def main():
     sg.change_look_and_feel('Dark')
 
     layout = [
-                # [sg.Text("VDP"), sg.Checkbox('nummers', default=True), sg.Checkbox('beelden')],
+        # [sg.Text("VDP"), sg.Checkbox('nummers', default=True), sg.Checkbox('beelden')],
 
+        [sg.Text('Nummer generator 2.0', text_color="Yellow")],
+        [sg.Text('Ordernummer', size=(15, 1)), sg.InputText(key="order_number")],
 
+        [sg.Text()],
+        [sg.CalendarButton("Datum")],
+        [sg.Text()],
 
-                [sg.Text('Nummer generator 2.0', text_color="Yellow")],
-                [sg.Text('Ordernummer', size=(15, 1)), sg.InputText(key="order_number")],
+        [sg.Text('Totaal aantal', size=(15, 1)), sg.Input(key="totaal_aantal")],
+        [sg.Text('Beginnummer', size=(15, 1)), sg.InputText(key="begin_nummer")],
+        [sg.Text('posities', size=(15, 1)), sg.InputText(key="posities")],
+        [sg.Text('voorloop getal', size=(15, 1)), sg.InputText(key="vlg0")],
+        [sg.Text('Aantal_per_rol', size=(15, 1)), sg.InputText(key='aantal_per_rol')],
+        [sg.Text('Mes', size=(15, 1)), sg.InputText(key='mes')],
 
+        [sg.Text('Y_waarde', size=(15, 1)), sg.InputText(key="Y_waarde")],
+        [sg.Text('Wikkel', size=(15, 1)), sg.InputText(key="wikkel")],
+        [sg.Text('prefix', size=(15, 1)), sg.InputText(key="prefix")],
+        [sg.Text('postfix', size=(15, 1)), sg.InputText(key="postfix")],
+        [sg.Text('hoogte etiket', size=(15, 1)), sg.InputText(key="hoogte")],
 
-                [sg.Text()],
-                [sg.CalendarButton("Datum")],
-                [sg.Text()],
+        [sg.Button("Ok"), sg.Cancel()],
 
-                [sg.Text('Totaal aantal', size=(15, 1)), sg.Input(key="totaal_aantal")],
-                [sg.Text('Beginnummer', size=(15, 1)), sg.InputText(key="begin_nummer")],
-                [sg.Text('posities', size=(15, 1)), sg.InputText(key="posities")],
-                [sg.Text('voorloop getal', size=(15, 1)), sg.InputText(key="vlg0")],
-                [sg.Text('Aantal_per_rol', size=(15, 1)), sg.InputText(key='aantal_per_rol')],
-                [sg.Text('Mes', size=(15, 1)), sg.InputText(key='mes')],
-
-                [sg.Text('Y_waarde', size=(15, 1)), sg.InputText(key="Y_waarde")],
-                [sg.Text('Wikkel', size=(15, 1)), sg.InputText(key="wikkel")],
-                [sg.Text('prefix', size=(15, 1)), sg.InputText(key="prefix")],
-                [sg.Text('postfix', size=(15, 1)), sg.InputText(key="postfix")],
-                [sg.Text('hoogte etiket', size=(15, 1)), sg.InputText(key="hoogte")],
-
-
-
-
-                [sg.Button("Ok"), sg.Cancel()],
-
-            [sg.Text('_' * 80)],
-            [sg.Text('SAVE of LOAD inputform', size=(35, 1))],
-            # [sg.Text('Your Folder', size=(15, 1), justification='right'),
-            #  sg.InputText('Default Folder', key='folder'), sg.FolderBrowse()],
-            [sg.Button('Exit'),
-             sg.Text(' ' * 40), sg.Button('SaveSettings'), sg.Button('LoadSettings')]
-                ]
+        [sg.Text('_' * 80)],
+        [sg.Text('SAVE of LOAD inputform', size=(35, 1))],
+        # [sg.Text('Your Folder', size=(15, 1), justification='right'),
+        #  sg.InputText('Default Folder', key='folder'), sg.FolderBrowse()],
+        [sg.Button('Exit'),
+         sg.Text(' ' * 40), sg.Button('SaveSettings'), sg.Button('LoadSettings')]
+    ]
 
     window = sg.Window('Nummer Generator test form').Layout(layout)
 
@@ -77,11 +74,8 @@ def main():
 
             print("ok")
 
-
-
-
             # print(button, values["order_number"], values["begin_nummer"], values["posities"])
-
+            datum = values["Datum"]
             ordernummer = values["order_number"]
             totaal_aantal = int(values["totaal_aantal"])
             begin_nummer = int(values["begin_nummer"])
@@ -91,26 +85,15 @@ def main():
             Y_waarde = int(values["Y_waarde"])
             wikkel = int(values["wikkel"])
             hoogte = int(values["hoogte"])
-            prefix =values["prefix"]
+            prefix = values["prefix"]
             postfix = values["postfix"]
             mes = int(values["mes"])
 
             inloop = Y_waarde * 10 - Y_waarde
 
+            print(datum)
+
             # use a dict to specify the summeary output or use dict values
-            keywargs = {"Ordernummer: ": ordernummer,
-
-                        "Aantal VDP's": 1,
-                        "Totaal aantal ": str(f'{totaal_aantal:,} etiketten').replace(",", "."),
-                        # 'Aantal Rollen': f'{aantal_rollen} rol(len) van {aantal_per_rol}',
-                        # "Rol_nummers": f'Rol_{begin_rolnummer + 1} t/m Rol_{begin_rolnummer + aantal_rollen}',
-                        "Mes ": mes,
-                        # 'Mes x combinaties ': f'{mes} van {combinaties} banen',
-                        "Wikkel": f'{wikkel} etiketten',
-
-                        'Inloop en uitloop': f'{Y_waarde} x 10 sheets =({inloop})'}
-            # todo output in html
-            html_sum_form_writer(titel=f'summary_{ordernummer}', **values, **keywargs)
 
 
             # print(type(int(values["order_number"])))
@@ -150,9 +133,9 @@ def main():
                     print("empty")
             # _____________________________
 
-            beginlijst = mes_wik.rol_num_dikt(begin_nummer,vlg,totaal_aantal,aantal_per_rol)
+            beginlijst = mes_wik.rol_num_dikt(begin_nummer, vlg, totaal_aantal, aantal_per_rol)
 
-            gemaakte_posix_paden=[]
+            gemaakte_posix_paden = []
             count = 0
             for key in beginlijst.items():
                 rol_nummer = key[0]
@@ -161,13 +144,12 @@ def main():
                 padnaam = Path(path, filenaam)
                 print(padnaam)
                 gemaakte_posix_paden.append(padnaam)
-                mes_wik.df_csv_rol_builder_met_rolnummer(beginnummer, posities, vlg, aantal_per_rol, wikkel, '', '',
-                                                 rol_nummer).to_csv(padnaam, index=0)
+                mes_wik.df_csv_rol_builder_met_rolnummer(beginnummer, posities, vlg, aantal_per_rol, wikkel, prefix, postfix,
+                                                         rol_nummer).to_csv(padnaam, index=0)
                 count += 1
                 print(beginnummer, filenaam)
 
             print(f'posix_paden {gemaakte_posix_paden}')
-
 
             aantal_rollen = len(beginlijst)
             print(f'aantal rollen {aantal_rollen}')
@@ -183,7 +165,7 @@ def main():
             begin = 0
             eind = mes
             for combi in range(combinaties):
-                print(begin , eind)
+                print(begin, eind)
 
                 combinatie_binnen_mes.append(sorted_files[begin:eind])
                 combinatie_binnen_mes_posix.append(gemaakte_posix_paden[begin:eind])
@@ -191,8 +173,8 @@ def main():
                 begin += mes
                 eind += mes
 
-            print(f'lijst {combinatie_binnen_mes}')
-            print(f' posix per combi {combinatie_binnen_mes_posix}')
+            # print(f'lijst {combinatie_binnen_mes}')
+            # print(f' posix per combi {combinatie_binnen_mes_posix}')
 
             if mes == 4:
                 mes_wik.mes_4(combinatie_binnen_mes, ordernummer)
@@ -203,7 +185,7 @@ def main():
 
                 VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
                 # print(VDP_final)
-                mes_wik.wikkel_4_baans_tc(VDP_final, Y_waarde,  inloop)
+                mes_wik.wikkel_4_baans_tc(VDP_final, Y_waarde, inloop)
 
             elif mes == 5:
 
@@ -216,7 +198,6 @@ def main():
                 VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
                 # print(VDP_final)
                 mes_wik.wikkel_5_baans_tc(VDP_final, Y_waarde, inloop)
-
 
             elif mes == 3:
 
@@ -231,7 +212,140 @@ def main():
                 mes_wik.wikkel_3_baans_tc(VDP_final, Y_waarde, inloop)
 
 
+            elif mes == 10:
+
+                mes_wik.read_out_10(combinatie_binnen_mes, ordernummer)
+
+                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+                # print(combinatie)
+                mes_wik.stapel_df_baan(combinatie, ordernummer)
+
+                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+                # print(VDP_final)
+                mes_wik.wikkel_10_baans_tc(VDP_final, Y_waarde, inloop)
+
+            elif mes == 2:
+
+                mes_wik.mes_2(combinatie_binnen_mes, ordernummer)
+
+                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+                # print(combinatie)
+                mes_wik.stapel_df_baan(combinatie, ordernummer)
+
+                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+                # print(VDP_final)
+                mes_wik.wikkel_2_baans_tc(VDP_final, Y_waarde, inloop)
+
+            elif mes == 6 :
+
+                mes_wik.mes_6(combinatie_binnen_mes, ordernummer)
+
+                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+                # print(combinatie)
+                mes_wik.stapel_df_baan(combinatie, ordernummer)
+
+                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+                # print(VDP_final)
+                mes_wik.wikkel_6_baans_tc(VDP_final, Y_waarde, inloop)
+
+
+            elif mes == 7 :
+
+                mes_wik.mes_7(combinatie_binnen_mes, ordernummer)
+
+                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+                # print(combinatie)
+                mes_wik.stapel_df_baan(combinatie, ordernummer)
+
+                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+                # print(VDP_final)
+                mes_wik.wikkel_7_baans_tc(VDP_final, Y_waarde, inloop)
+
+
+            elif mes == 8 :
+
+                mes_wik.mes_8(combinatie_binnen_mes, ordernummer)
+
+                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+                # print(combinatie)
+                mes_wik.stapel_df_baan(combinatie, ordernummer)
+
+                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+                # print(VDP_final)
+                mes_wik.wikkel_8_baans_tc(VDP_final, Y_waarde, inloop)
+
+
+            elif mes == 9 :
+
+                mes_wik.mes_9(combinatie_binnen_mes, ordernummer)
+
+                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+                # print(combinatie)
+                mes_wik.stapel_df_baan(combinatie, ordernummer)
+
+                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+                # print(VDP_final)
+                mes_wik.wikkel_9_baans_tc(VDP_final, Y_waarde, inloop)
+
+
+
+
+
+
+
+
+
+            # voorlopige in voor summary
+
+            begin_nummer_lijst = [
+                begin for begin in range(begin_nummer, begin_nummer + totaal_aantal - 1, aantal_per_rol)
+            ]
+
+            rol_nummer_lijst = [
+                f"Rol {num:>{0}{3}}" for num in range(1, len(begin_nummer_lijst) + 1)
+            ]
+
+            # print(begin_nummer_lijst)
+            begin_eind_nummer_lijst = [
+                [begin, begin + aantal_per_rol - 1] for begin in begin_nummer_lijst
+            ]
+            # print(begin_eind_nummer_lijst)
+
+            belijst = [
+                [f"{begin:>{vlg}{posities}};{(begin + aantal_per_rol - 1):>{vlg}{posities}}"]
+                for begin in begin_nummer_lijst
+            ]
+
+            sumlijst = [
+                [
+                    f"{prefix}{begin:>{vlg}{posities}}{postfix};{prefix}{(begin + aantal_per_rol - 1):>{vlg}{posities}}{postfix}"
+                ]
+                for begin in begin_nummer_lijst
+            ]
+
+            beg_eind_lijst_df = pd.DataFrame(sumlijst, dtype="str")
+
+            beg_eind_lijst_df.to_csv(f"summary/{ordernummer}_sum.csv", index=0)
+
+            keywargs = {"Ordernummer: ": ordernummer,
+                        "Aantal VDP's": 1,
+                        "Totaal aantal ": str(f'{totaal_aantal:,} etiketten').replace(",", "."),
+                        "begin_nummer": f'{begin_nummer:>{0}{posities}}',
+                        "eind_nummer": f'{begin_nummer + totaal_aantal - 1:>{0}{posities}}',
+                        'Aantal Rollen': f'{aantal_rollen} rol(len) van {aantal_per_rol}',
+                        # "Rol_nummers": f'Rol_{begin_rolnummer + 1} t/m Rol_{begin_rolnummer + aantal_rollen}',
+                        "Mes ": mes,
+                        # 'Mes x combinaties ': f'{mes} van {combinaties} banen',
+                        "Wikkel": f'{wikkel + 3} etiketten',
+
+                        'Inloop en uitloop': f'{Y_waarde} x 10 sheets =({inloop})'}
+            # todo output in html
+            html_sum_form_writer(titel=f'summary_{ordernummer}', **keywargs)  # **values voor alle ingegeven values
+
+
+            # clean all
     window.close()
+
 
 if __name__ == '__main__':
     main()

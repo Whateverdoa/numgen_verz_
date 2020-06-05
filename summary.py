@@ -1,14 +1,18 @@
+"""deze summary komt niet uit de form"""
+
 import pandas as pd
 import os
 from pathlib import Path
 
-from num_gen_2019 import begin_eind_nummer_lijst, belijst, ordernummer, sumlijst
+# todo kan dit betger gewoon in main form zetten zetten
 
-
-beg_eind_lijst_df = pd.DataFrame(sumlijst, dtype ="str")
-
-
-beg_eind_lijst_df.to_csv(f"summary/{ordernummer}_sum.csv",  index=0)
+# from num_gen_2019 import begin_eind_nummer_lijst, belijst, ordernummer, sumlijst
+#
+#
+# beg_eind_lijst_df = pd.DataFrame(sumlijst, dtype ="str")
+#
+#
+# beg_eind_lijst_df.to_csv(f"summary/{ordernummer}_sum.csv",  index=0)
 
 # todo css
 
