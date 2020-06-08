@@ -106,17 +106,17 @@ def main():
             print(csvs)
             for file in csvs:
                 naam = f"{path_vdp}/{file}"  # /VDP_map
-                print(naam)
+                # print(naam)
                 if os.path.exists(naam):
                     os.remove(naam)
                 else:
                     print("empty")
 
             csvs = [x for x in os.listdir(path) if x.endswith(".csv")]
-            print(csvs)
+            # print(csvs)
             for file in csvs:
                 naam = f"{path}/{file}"  # /tmp
-                print(naam)
+                # print(naam)
                 if os.path.exists(naam):
                     os.remove(naam)
                 else:
@@ -141,13 +141,13 @@ def main():
                 rol_nummer = key[0]
                 beginnummer = int(key[1])
                 filenaam = f'tmp{count:>{0}{6}}.csv'
-                padnaam = Path(path, filenaam)
-                print(padnaam)
+                padnaam = Path(path.joinpath(filenaam))
+                # print(padnaam)
                 gemaakte_posix_paden.append(padnaam)
                 mes_wik.df_csv_rol_builder_met_rolnummer(beginnummer, posities, vlg, aantal_per_rol, wikkel, prefix, postfix,
                                                          rol_nummer).to_csv(padnaam, index=0)
                 count += 1
-                print(beginnummer, filenaam)
+                print(beginnummer, filenaam, padnaam)
 
             print(f'posix_paden {gemaakte_posix_paden}')
 
@@ -176,116 +176,141 @@ def main():
             # print(f'lijst {combinatie_binnen_mes}')
             # print(f' posix per combi {combinatie_binnen_mes_posix}')
 
-            if mes == 4:
-                mes_wik.mes_4(combinatie_binnen_mes, ordernummer)
-
-                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
-                # print(combinatie)
-                mes_wik.stapel_df_baan(combinatie, ordernummer)
-
-                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
-                # print(VDP_final)
-                mes_wik.wikkel_4_baans_tc(VDP_final, Y_waarde, inloop)
-
-            elif mes == 5:
-
-                mes_wik.mes_5(combinatie_binnen_mes, ordernummer)
-
-                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
-                # print(combinatie)
-                mes_wik.stapel_df_baan(combinatie, ordernummer)
-
-                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
-                # print(VDP_final)
-                mes_wik.wikkel_5_baans_tc(VDP_final, Y_waarde, inloop)
-
-            elif mes == 3:
-
-                mes_wik.mes_3(combinatie_binnen_mes, ordernummer)
-
-                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
-                # print(combinatie)
-                mes_wik.stapel_df_baan(combinatie, ordernummer)
-
-                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
-                # print(VDP_final)
-                mes_wik.wikkel_3_baans_tc(VDP_final, Y_waarde, inloop)
 
 
-            elif mes == 10:
+            # if mes == 4:
+            #     mes_wik.mes_4(combinatie_binnen_mes, ordernummer)
+            #
+            #     combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+            #     # print(combinatie)
+            #     mes_wik.stapel_df_baan(combinatie, ordernummer)
+            #
+            #     VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+            #     # print(VDP_final)
+            #     mes_wik.wikkel_4_baans_tc(VDP_final, Y_waarde, inloop)
+            #
+            # elif mes == 5:
+            #
+            #     mes_wik.mes_5(combinatie_binnen_mes, ordernummer)
+            #
+            #     combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+            #     # print(combinatie)
+            #     mes_wik.stapel_df_baan(combinatie, ordernummer)
+            #
+            #     VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+            #     # print(VDP_final)
+            #     mes_wik.wikkel_5_baans_tc(VDP_final, Y_waarde, inloop)
+            #
+            # elif mes == 3:
+            #
+            #     mes_wik.mes_3(combinatie_binnen_mes, ordernummer)
+            #
+            #     combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+            #     # print(combinatie)
+            #     mes_wik.stapel_df_baan(combinatie, ordernummer)
+            #
+            #     VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+            #     # print(VDP_final)
+            #     mes_wik.wikkel_3_baans_tc(VDP_final, Y_waarde, inloop)
+            #
+            #
+            # elif mes == 10:
+            #
+            #     mes_wik.read_out_10(combinatie_binnen_mes, ordernummer)
+            #
+            #     combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+            #     # print(combinatie)
+            #     mes_wik.stapel_df_baan(combinatie, ordernummer)
+            #
+            #     VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+            #     # print(VDP_final)
+            #     mes_wik.wikkel_10_baans_tc(VDP_final, Y_waarde, inloop)
+            #
+            # elif mes == 2:
+            #
+            #     mes_wik.mes_2(combinatie_binnen_mes, ordernummer)
+            #
+            #     combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+            #     # print(combinatie)
+            #     mes_wik.stapel_df_baan(combinatie, ordernummer)
+            #
+            #     VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+            #     # print(VDP_final)
+            #     mes_wik.wikkel_2_baans_tc(VDP_final, Y_waarde, inloop)
+            #
+            # elif mes == 6 :
+            #
+            #     mes_wik.mes_6(combinatie_binnen_mes, ordernummer)
+            #
+            #     combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+            #     # print(combinatie)
+            #     mes_wik.stapel_df_baan(combinatie, ordernummer)
+            #
+            #     VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+            #     # print(VDP_final)
+            #     mes_wik.wikkel_6_baans_tc(VDP_final, Y_waarde, inloop)
+            #
+            #
+            # elif mes == 7 :
+            #
+            #     mes_wik.mes_7(combinatie_binnen_mes, ordernummer)
+            #
+            #     combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+            #     # print(combinatie)
+            #     mes_wik.stapel_df_baan(combinatie, ordernummer)
+            #
+            #     VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+            #     # print(VDP_final)
+            #     mes_wik.wikkel_7_baans_tc(VDP_final, Y_waarde, inloop)
+            #
+            #
+            # elif mes == 8 :
+            #
+            #     mes_wik.mes_8(combinatie_binnen_mes, ordernummer)
+            #
+            #     combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+            #     # print(combinatie)
+            #     mes_wik.stapel_df_baan(combinatie, ordernummer)
+            #
+            #     VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+            #     # print(VDP_final)
+            #     mes_wik.wikkel_8_baans_tc(VDP_final, Y_waarde, inloop)
+            #
+            #
+            # elif mes == 9 :
+            teller=0
+            for lijst in combinatie_binnen_mes_posix:
 
-                mes_wik.read_out_10(combinatie_binnen_mes, ordernummer)
+                print(lijst)
+                print(type(mes_wik.lees_per_lijst(lijst, mes)))
+                csv_naam = Path(path_vdp.joinpath(f'df_{teller:>{0}{4}}.csv'))
+                mes_wik.lees_per_lijst(lijst, mes).to_csv(csv_naam, ";", index=0)
+                teller+=1
 
-                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
-                # print(combinatie)
-                mes_wik.stapel_df_baan(combinatie, ordernummer)
+            df_csv_files_in_tmp = [x for x in os.listdir(path_vdp) if x.endswith(".csv")]
+            sorted_df_files = sorted(df_csv_files_in_tmp)
 
-                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
-                # print(VDP_final)
-                mes_wik.wikkel_10_baans_tc(VDP_final, Y_waarde, inloop)
-
-            elif mes == 2:
-
-                mes_wik.mes_2(combinatie_binnen_mes, ordernummer)
-
-                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
-                # print(combinatie)
-                mes_wik.stapel_df_baan(combinatie, ordernummer)
-
-                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
-                # print(VDP_final)
-                mes_wik.wikkel_2_baans_tc(VDP_final, Y_waarde, inloop)
-
-            elif mes == 6 :
-
-                mes_wik.mes_6(combinatie_binnen_mes, ordernummer)
-
-                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
-                # print(combinatie)
-                mes_wik.stapel_df_baan(combinatie, ordernummer)
-
-                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
-                # print(VDP_final)
-                mes_wik.wikkel_6_baans_tc(VDP_final, Y_waarde, inloop)
+            mes_wik.stapel_df_baan(sorted_df_files, ordernummer)
 
 
-            elif mes == 7 :
 
-                mes_wik.mes_7(combinatie_binnen_mes, ordernummer)
+            # print(f'hor frame ={horizontale_dataframes}')
+            # mes_wik.stapel_df_baan_met_df_lijst(horizontale_dataframes,ordernummer)
 
-                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
-                # print(combinatie)
-                mes_wik.stapel_df_baan(combinatie, ordernummer)
-
-                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
-                # print(VDP_final)
-                mes_wik.wikkel_7_baans_tc(VDP_final, Y_waarde, inloop)
-
-
-            elif mes == 8 :
-
-                mes_wik.mes_8(combinatie_binnen_mes, ordernummer)
-
-                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
-                # print(combinatie)
-                mes_wik.stapel_df_baan(combinatie, ordernummer)
-
-                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
-                # print(VDP_final)
-                mes_wik.wikkel_8_baans_tc(VDP_final, Y_waarde, inloop)
+                # mes_wik.mes_9(combinatie_binnen_mes, ordernummer)
+                #
+                # combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
+                # # print(combinatie)
+                # mes_wik.stapel_df_baan(combinatie, ordernummer)
+                #
+                # VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
+                # # print(VDP_final)
+                # mes_wik.wikkel_9_baans_tc(VDP_final, Y_waarde, inloop)
 
 
-            elif mes == 9 :
 
-                mes_wik.mes_9(combinatie_binnen_mes, ordernummer)
 
-                combinatie = sorted([x for x in os.listdir(path_vdp) if x.endswith(".csv")])
-                # print(combinatie)
-                mes_wik.stapel_df_baan(combinatie, ordernummer)
 
-                VDP_final = [x for x in os.listdir(path_final) if x.endswith(".csv")]
-                # print(VDP_final)
-                mes_wik.wikkel_9_baans_tc(VDP_final, Y_waarde, inloop)
 
 
 

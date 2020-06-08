@@ -23,7 +23,7 @@ def kol_naam_lijst_builder(mes=1):
         num = f"num_{count}"
         omschrijving = f"omschrijving_{count}"
         pdf = f"pdf_{count}"
-        # kollomnaamlijst.append(num)
+        kollomnaamlijst.append(num)
         kollomnaamlijst.append(omschrijving)
         kollomnaamlijst.append(pdf)
 
@@ -31,21 +31,23 @@ def kol_naam_lijst_builder(mes=1):
     return kollomnaamlijst
 
 
-def lees_per_lijst(lijst_met_posix_paden):
+def lees_per_lijst(lijst_met_posix_paden, mes):
     """1 lijst in len(lijst) namen uit
     input lijst met posix paden"""
     count = 1
     concatlist = []
     for posix_pad_naar_file in lijst_met_posix_paden:
         # print(posix_pad_naar_file)
-        naam = f'file{count:>{0}{4}}'
+        naam = f'lees_per_lijst_file_{count:>{0}{4}}'
         print(naam)
         naam = pd.read_csv(posix_pad_naar_file)
         concatlist.append(naam)
         count += 1
-    kolomnamen = kol_naam_lijst_builder(8)
+    kolomnamen = kol_naam_lijst_builder(mes)
+    # print((kolomnamen))
     lijst_over_axis_1 = pd.concat(concatlist, axis=1)
     lijst_over_axis_1.columns = [kolomnamen]
+    # print(lijst_over_axis_1)
 
     # return lijst_over_axis_1.to_csv("test2.csv", index=0)
     return lijst_over_axis_1
@@ -230,7 +232,7 @@ def rol_num_dikt(begin,vlg, totaal, aantal_per_rol):
     # rollen_metbegin_nummers
     return rollen_metbegin_nummers
 
-# todo create class!!!
+# todo create class!!! namedtuple
 
 # beginlijst=rol_num_dikt(1, 3, 1000,100)
 
@@ -1122,11 +1124,15 @@ def stapel_df_baan(lijstin, ordernummer):
         print(lijstin[index])
         to_append_df = pd.read_csv(
             f"{path_vdp}/{lijstin[index]}", ";", dtype="str", index_col=0
-        )
+        ) #
         stapel_df.append(to_append_df)
-    pd.concat(stapel_df, axis=0).to_csv(f"{path_final}/VDP_{ordernummer}.csv", ";")
+    pd.concat(stapel_df, axis=0).to_csv(f"{path_final}/VDP_{ordernummer}.csv", ";", index=0)
 
 
+def stapel_df_baan_met_df_lijst(lijst_van_dataframes, ordernummer):
+
+
+    pd.concat(lijst_van_dataframes, axis=0).to_csv(f"{path_final}/VDP_{ordernummer}.csv", ";")
 
 
 
