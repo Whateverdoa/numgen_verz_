@@ -40,7 +40,7 @@ def lees_per_lijst(lijst_met_posix_paden, mes):
         # print(posix_pad_naar_file)
         naam = f'lees_per_lijst_file_{count:>{0}{4}}'
         print(naam)
-        naam = pd.read_csv(posix_pad_naar_file)
+        naam = pd.read_csv(posix_pad_naar_file, dtype="str")
         concatlist.append(naam)
         count += 1
     kolomnamen = kol_naam_lijst_builder(mes)
@@ -74,7 +74,7 @@ def kolom_naam_gever_num_pdf_omschrijving(mes=1):
 
     for count in range(1, mes + 1):
         # 5 = len (list) of mes
-        num = f"Column_{count}"
+        num = f"Kolom_{count}"
         omschrijving = f"omschrijving_{count}"
         pdf = f"pdf_{count}"
         kollomnaamlijst.append(num)
@@ -1123,7 +1123,7 @@ def stapel_df_baan(lijstin, ordernummer):
     for index in range(len(lijstin)):
         print(lijstin[index])
         to_append_df = pd.read_csv(
-            f"{path_vdp}/{lijstin[index]}", ";", dtype="str", index_col=0
+            f"{path_vdp}/{lijstin[index]}", ";", dtype="str"
         ) #
         stapel_df.append(to_append_df)
     pd.concat(stapel_df, axis=0).to_csv(f"{path_final}/VDP_{ordernummer}.csv", ";", index=0)
@@ -1136,8 +1136,42 @@ def stapel_df_baan_met_df_lijst(lijst_van_dataframes, ordernummer):
 
 
 
-def csv_bouwer_met_rolnummer():
-    pass
+def wikkel_n_baans_tc(input_vdp_posix_lijst, etiketten_Y, in_loop, mes):
+    """last step voor VDP adding in en uitloop"""
+
+    inlooplijst = (".;;stans.pdf;" * mes)
+    inlooplijst = inlooplijst[:-1] + "\n"  # -1 removes empty column in final file
+
+    for file_naam in input_vdp_posix_lijst:
+        with open(f"{file_naam}", "r", encoding="utf-8") as target:
+            readline = target.readlines()
+
+        nieuwe_vdp_naam = path_final / file_naam.name
+        with open(nieuwe_vdp_naam, "w", encoding="utf-8") as target:
+            target.writelines(kolom_naam_gever_num_pdf_omschrijving(mes))
+
+            target.writelines(readline[1:etiketten_Y + 1])
+            # target.writelines(readline[16:(etikettenY+etikettenY-8)])
+
+            target.writelines(
+                (inlooplijst) * in_loop)  # inloop
+            print("inloop maken")
+            target.writelines(readline[1:])  # bestand
+
+            target.writelines(
+                (inlooplijst) * in_loop)  # inloop  # uitloop
+            print("uitloop maken")
+            target.writelines(readline[-etiketten_Y:])
+
+
+
+# print(VDP_final)
+
+
+
+
+
+
 
 
 
