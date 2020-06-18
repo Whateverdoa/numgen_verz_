@@ -164,18 +164,18 @@ def wikkel_3_baans_tc(input_vdp_lijst, etikettenY, inloop):
             target.writelines(readline[-etikettenY:])
 
 
-def df_csv_rol_builder_met_rolnummer(begin_nummer_uit_lijst, posities, vlg, aantal_per_rol, wikkel, prefix, postfix, rolnummer):
+def df_csv_rol_builder_met_rolnummer(begin_nummer_uit_lijst, posities, vlg, aantal_per_rol, wikkel, prefix, postfix, rolnummer, veelvoud=1):
 
     rol = [
         (f"{prefix}{getal:>{vlg}{posities}}{postfix}", "", "leeg.pdf")
         for getal in range(
-            begin_nummer_uit_lijst, (begin_nummer_uit_lijst + aantal_per_rol)
-        )
+            begin_nummer_uit_lijst, (begin_nummer_uit_lijst + aantal_per_rol))
+            for i in range(veelvoud)
     ]
     df_rol = pd.DataFrame(rol, columns=["num", "omschrijving", "pdf"])
 
     begin = df_rol.iat[0, 0]
-    eind_positie_rol = (aantal_per_rol) - 1
+    eind_positie_rol = (aantal_per_rol*veelvoud) - 1
     eind = df_rol.iat[eind_positie_rol, 0]
 
     twee_extra = pd.DataFrame(
@@ -216,7 +216,7 @@ def losse_csv_rollen_builder(posities,
     ]
     # return len(builder)
 
-def rol_num_dikt(begin,vlg, totaal, aantal_per_rol):
+def rol_num_dikt(begin, vlg, totaal, aantal_per_rol):
     """"maak twee lijsten nummers en rolnummers voeg samen tot dikt"""
     rollen_metbegin_nummers = {}
 

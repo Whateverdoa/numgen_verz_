@@ -31,6 +31,9 @@ def main():
 
         [sg.Text('Totaal aantal', size=(15, 1)), sg.Input(key="totaal_aantal")],
         [sg.Text('Beginnummer', size=(15, 1)), sg.InputText(key="begin_nummer")],
+
+        [sg.Text('Veelvoud', size=(15, 1)), sg.InputText(key="veelvoud")],
+
         [sg.Text('posities', size=(15, 1)), sg.InputText(key="posities")],
         [sg.Text('voorloop getal', size=(15, 1)), sg.InputText(key="vlg0")],
         [sg.Text('Aantal_per_rol', size=(15, 1)), sg.InputText(key='aantal_per_rol')],
@@ -83,6 +86,7 @@ def main():
             ordernummer = values["order_number"]
             totaal_aantal = int(values["totaal_aantal"])
             begin_nummer = int(values["begin_nummer"])
+            veelvoud = int(values["veelvoud"])
             posities = int(values["posities"])
             vlg = int(values["vlg0"])
             aantal_per_rol = int(values["aantal_per_rol"])
@@ -138,7 +142,7 @@ def main():
             # _____________________________
 
             beginlijst = mes_wik.rol_num_dikt(begin_nummer, vlg, totaal_aantal, aantal_per_rol)
-            print(beginlijst)
+            print(f'beginlijst met rol nummers : {beginlijst}')
 
             gemaakte_posix_paden = []
             count = 0
@@ -150,7 +154,7 @@ def main():
                 # print(padnaam)
                 gemaakte_posix_paden.append(padnaam)
                 mes_wik.df_csv_rol_builder_met_rolnummer(beginnummer, posities, vlg, aantal_per_rol, wikkel, prefix, postfix,
-                                                         rol_nummer).to_csv(padnaam, index=0)
+                                                         rol_nummer, veelvoud).to_csv(padnaam, index=0)
                 count += 1
                 print(beginnummer, filenaam, padnaam)
 
