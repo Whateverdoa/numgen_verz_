@@ -11,7 +11,7 @@ def lijstmaker(begin_nummer, totaal, aantal_per_rol):
 
 
 def rol_nummer_lijst(lijst):
-    rol_nummers = [f'Rol {num:>{0}{3}}' for num in range(1,len(lijst)+1)]
+    rol_nummers = [f'Rol {num:>{0}{3}}' for num in range(1, len(lijst) + 1)]
     return rol_nummers
 
 
@@ -44,7 +44,7 @@ def lees_per_lijst(lijst_met_posix_paden, mes):
         concatlist.append(naam)
         count += 1
     kolomnamen = kol_naam_lijst_builder(mes)
-    # print((kolomnamen))
+    print(f'kolomnamen = {kolomnamen}')
     lijst_over_axis_1 = pd.concat(concatlist, axis=1)
     lijst_over_axis_1.columns = [kolomnamen]
     # print(lijst_over_axis_1)
@@ -52,14 +52,12 @@ def lees_per_lijst(lijst_met_posix_paden, mes):
     # return lijst_over_axis_1.to_csv("test2.csv", index=0)
     return lijst_over_axis_1
 
-
-
-
-        # naam = pd.read_csv(csv)  # naam = pd.read_csv(f'{pad}/{csv}')
-        # concatlist.append(naam)
+    # naam = pd.read_csv(csv)  # naam = pd.read_csv(f'{pad}/{csv}')
+    # concatlist.append(naam)
 
     # lijst_over_axis_1 = pd.concat(concatlist, axis=1)
     # return lijst_over_axis_1
+
 
 def kolom_naam_gever_num_pdf_omschrijving(mes=1):
     """supplies a specific string  met de oplopende kolom namen num_1, pdf_1, omschrijving_1 etc"""
@@ -98,7 +96,6 @@ def mes_3(lissst, ordernum):
         b = lissst[index][1]
         c = lissst[index][2]
 
-
         color_1 = f"Baan_{index + 1:>{0}{3}}"
         color_2 = f"{index}b"
 
@@ -106,7 +103,6 @@ def mes_3(lissst, ordernum):
         file_2 = pd.read_csv(f"{path}\{b}", ",", dtype="str")
 
         file_3 = pd.read_csv(f"{path}\{c}", ",", dtype="str")
-
 
         combinatie_samenvoegen = pd.concat([file_1, file_2, file_3], axis=1)
 
@@ -164,32 +160,32 @@ def wikkel_3_baans_tc(input_vdp_lijst, etikettenY, inloop):
             target.writelines(readline[-etikettenY:])
 
 
-def df_csv_rol_builder_met_rolnummer(begin_nummer_uit_lijst, posities, vlg, aantal_per_rol, wikkel, prefix, postfix, rolnummer, veelvoud=1):
-
+def df_csv_rol_builder_met_rolnummer(begin_nummer_uit_lijst, posities, vlg, aantal_per_rol, wikkel, prefix, postfix,
+                                     rolnummer, veelvoud=1):
     rol = [
         (f"{prefix}{getal:>{vlg}{posities}}{postfix}", "", "leeg.pdf")
         for getal in range(
             begin_nummer_uit_lijst, (begin_nummer_uit_lijst + aantal_per_rol))
-            for i in range(veelvoud)
+        for i in range(veelvoud)
     ]
     df_rol = pd.DataFrame(rol, columns=["num", "omschrijving", "pdf"])
 
     begin = df_rol.iat[0, 0]
-    eind_positie_rol = (aantal_per_rol*veelvoud) - 1
+    eind_positie_rol = (aantal_per_rol * veelvoud) - 1
     eind = df_rol.iat[eind_positie_rol, 0]
 
     twee_extra = pd.DataFrame(
-        [("0", "", "stans.pdf") for x in range(2)],
+        [(f"{prefix}{x:>{vlg}{posities}}{postfix}", "", "stans.pdf") for x in range(2)],
         columns=["num", "omschrijving", "pdf"],
     )
 
     wikkel_df = pd.DataFrame(
-        [("0", "", "stans.pdf") for x in range(wikkel)],
+        [(f"{prefix}{x:>{vlg}{posities}}{postfix}", "", "stans.pdf") for x in range(wikkel)],
         columns=["num", "omschrijving", "pdf"],
     )
 
     sluitstuk = pd.DataFrame(
-        [["0", f"{rolnummer} {begin} t/m {eind}", "stans.pdf"]],
+        [[f"{prefix}{begin_nummer_uit_lijst:>{vlg}{posities}}{postfix}", f"{rolnummer} {begin} t/m {eind}", "stans.pdf"]],
         columns=["num", "omschrijving", "pdf"],
     )
 
@@ -209,12 +205,14 @@ def losse_csv_rollen_builder(posities,
                              postfix,
                              lijst_rolnummer):
     builder = [
-        df_csv_rol_builder_met_rolnummer(begin, posities, vlg, aantal_per_rol, wikkel,  prefix,  postfix, lijst_rolnummer).to_csv(
-        f"{path}/tmp{begin:>{0}{6}}.csv", index=0
-    )
-    for begin in begin_nummer_lijst
+        df_csv_rol_builder_met_rolnummer(begin, posities, vlg, aantal_per_rol, wikkel, prefix, postfix,
+                                         lijst_rolnummer).to_csv(
+            f"{path}/tmp{begin:>{0}{6}}.csv", index=0
+        )
+        for begin in begin_nummer_lijst
     ]
     # return len(builder)
+
 
 def rol_num_dikt(begin, vlg, totaal, aantal_per_rol):
     """"maak twee lijsten nummers en rolnummers voeg samen tot dikt"""
@@ -231,6 +229,7 @@ def rol_num_dikt(begin, vlg, totaal, aantal_per_rol):
     rollen_metbegin_nummers = {rolnummers[i]: beginnummers[i] for i in range(aantal_rollen)}
     # rollen_metbegin_nummers
     return rollen_metbegin_nummers
+
 
 # todo create class!!! namedtuple
 
@@ -275,16 +274,11 @@ def mes_2(lissst, ordernum):
         a = lissst[index][0]
         b = lissst[index][1]
 
-
-
         color_1 = f"Baan_{index + 1:>{0}{3}}"
         color_2 = f"{index}b"
 
         file_1 = pd.read_csv(f"{path}\{a}", ",", dtype="str")
         file_2 = pd.read_csv(f"{path}\{b}", ",", dtype="str")
-
-
-
 
         combinatie_samenvoegen = pd.concat([file_1, file_2], axis=1)
 
@@ -399,7 +393,7 @@ def wikkel_4_baans_tc(input_vdp_lijst, etikettenY, inloop):
                 "id;num_1;omschrijving_1;pdf_1;num_2;omschrijving_2;pdf_2;num_3;omschrijving_3;pdf_3;num_4;omschrijving_4;pdf_4\n"
             )
             # regel staat zo omdat ik kolomnaam id nog niet erin krijg
-            target.writelines(readline[1:etikettenY+1])
+            target.writelines(readline[1:etikettenY + 1])
             # target.writelines(readline[16:(etikettenY+etikettenY-8)])
 
             target.writelines(
@@ -486,7 +480,7 @@ def wikkel_5_baans_tc(input_vdp_lijst, etikettenY, inloop):
                 "id;num_1;omschrijving_1;pdf_1;num_2;omschrijving_2;pdf_2;num_3;omschrijving_3;pdf_3;num_4;omschrijving_4;pdf_4;num_5;omschrijving_5;pdf_5\n"
             )
             # regel staat zo omdat ik kolomnaam id nog niet erin krijg
-            target.writelines(readline[1:etikettenY+1])
+            target.writelines(readline[1:etikettenY + 1])
             # target.writelines(readline[16:(etikettenY+etikettenY-8)])
 
             target.writelines(
@@ -515,7 +509,6 @@ def read_out_6(lissst, ordernum):
         e = lissst[index][4]
         f = lissst[index][5]
 
-
         color_1 = f"VDP_{index + 1}"
         # color_2 = f"{index}b"
 
@@ -527,8 +520,6 @@ def read_out_6(lissst, ordernum):
 
         file_5 = pd.read_csv(f"tmp/{e}", ",", dtype="str")
         file_6 = pd.read_csv(f"tmp/{f}", ",", dtype="str")
-
-
 
         samengevoeg_10 = pd.concat(
             [
@@ -597,7 +588,8 @@ def wikkel_6_baans_tc(input_vdp_lijst, y_waarde, inloop):
 
         with open(f"{path_final}/def_{file_naam}", "w", encoding="utf-8") as target:
             target.writelines(
-                "id;" + kolom_naam_gever_num_pdf_omschrijving(6))    # regel staat zo omdat ik kolomnaam id nog niet erin krijg
+                "id;" + kolom_naam_gever_num_pdf_omschrijving(
+                    6))  # regel staat zo omdat ik kolomnaam id nog niet erin krijg
 
             target.writelines(readline[1:y_waarde])
 
@@ -613,7 +605,7 @@ def wikkel_6_baans_tc(input_vdp_lijst, y_waarde, inloop):
                 * inloop
             )  # uitloop
 
-            target.writelines(readline[-y_waarde:]) # check of dit laatste uit file is
+            target.writelines(readline[-y_waarde:])  # check of dit laatste uit file is
 
 
 def read_out_7(lissst, ordernum):
@@ -627,7 +619,6 @@ def read_out_7(lissst, ordernum):
         e = lissst[index][4]
         f = lissst[index][5]
         g = lissst[index][6]
-
 
         color_1 = f"VDP_{index + 1}"
         # color_2 = f"{index}b"
@@ -714,7 +705,8 @@ def wikkel_7_baans_tc(input_vdp_lijst, y_waarde, inloop):
 
         with open(f"{path_final}/def_{file_naam}", "w", encoding="utf-8") as target:
             target.writelines(
-                "id;" + kolom_naam_gever_num_pdf_omschrijving(7))  # regel staat zo omdat ik kolomnaam id nog niet erin krijg
+                "id;" + kolom_naam_gever_num_pdf_omschrijving(
+                    7))  # regel staat zo omdat ik kolomnaam id nog niet erin krijg
 
             target.writelines(readline[1:y_waarde])
 
@@ -760,7 +752,6 @@ def read_out_8(lissst, ordernum):
 
         file_7 = pd.read_csv(f"tmp/{g}", ",", dtype="str")
         file_8 = pd.read_csv(f"tmp/{h}", ",", dtype="str")
-
 
         samengevoeg_10 = pd.concat(
             [
@@ -837,7 +828,8 @@ def wikkel_8_baans_tc(input_vdp_lijst, y_waarde, inloop):
 
         with open(f"{path_final}/def_{file_naam}", "w", encoding="utf-8") as target:
             target.writelines(
-                "id;" + kolom_naam_gever_num_pdf_omschrijving(8))  # regel staat zo omdat ik kolomnaam id nog niet erin krijg
+                "id;" + kolom_naam_gever_num_pdf_omschrijving(
+                    8))  # regel staat zo omdat ik kolomnaam id nog niet erin krijg
 
             target.writelines(readline[1:y_waarde])
 
@@ -887,7 +879,6 @@ def read_out_9(lissst, ordernum):
         file_8 = pd.read_csv(f"tmp/{h}", ",", dtype="str")
 
         file_9 = pd.read_csv(f"tmp/{i}", ",", dtype="str")
-
 
         samengevoeg_10 = pd.concat(
             [
@@ -966,7 +957,8 @@ def wikkel_9_baans_tc(input_vdp_lijst, y_waarde, inloop):
 
         with open(f"{path_final}/def_{file_naam}", "w", encoding="utf-8") as target:
             target.writelines(
-                "id;" + kolom_naam_gever_num_pdf_omschrijving(9))  # regel staat zo omdat ik kolomnaam id nog niet erin krijg
+                "id;" + kolom_naam_gever_num_pdf_omschrijving(
+                    9))  # regel staat zo omdat ik kolomnaam id nog niet erin krijg
 
             target.writelines(readline[1:y_waarde])
 
@@ -983,6 +975,7 @@ def wikkel_9_baans_tc(input_vdp_lijst, y_waarde, inloop):
             )  # uitloop
 
             target.writelines(readline[-y_waarde:])  # check of dit laatste uit file is
+
 
 def read_out_10(lissst, ordernum):
     """builds  and concats 7 files over axis 1"""
@@ -1098,7 +1091,8 @@ def wikkel_10_baans_tc(input_vdp_lijst, y_waarde, inloop):
 
         with open(f"{path_final}/def_{file_naam}", "w", encoding="utf-8") as target:
             target.writelines(
-                "id;" + kolom_naam_gever_num_pdf_omschrijving(10))    # regel staat zo omdat ik kolomnaam id nog niet erin krijg
+                "id;" + kolom_naam_gever_num_pdf_omschrijving(
+                    10))  # regel staat zo omdat ik kolomnaam id nog niet erin krijg
 
             target.writelines(readline[1:y_waarde])
 
@@ -1114,8 +1108,7 @@ def wikkel_10_baans_tc(input_vdp_lijst, y_waarde, inloop):
                 * inloop
             )  # uitloop
 
-            target.writelines(readline[-y_waarde:]) # check of dit laatste uit file is
-
+            target.writelines(readline[-y_waarde:])  # check of dit laatste uit file is
 
 
 def stapel_df_baan(lijstin, ordernummer):
@@ -1124,16 +1117,13 @@ def stapel_df_baan(lijstin, ordernummer):
         print(lijstin[index])
         to_append_df = pd.read_csv(
             f"{path_vdp}/{lijstin[index]}", ";", dtype="str"
-        ) #
+        )  #
         stapel_df.append(to_append_df)
     pd.concat(stapel_df, axis=0).to_csv(f"{path_final}/VDP_{ordernummer}.csv", ";", index=0)
 
 
 def stapel_df_baan_met_df_lijst(lijst_van_dataframes, ordernummer):
-
-
     pd.concat(lijst_van_dataframes, axis=0).to_csv(f"{path_final}/VDP_{ordernummer}.csv", ";")
-
 
 
 def wikkel_n_baans_tc(input_vdp_posix_lijst, etiketten_Y, in_loop, mes):
@@ -1163,16 +1153,4 @@ def wikkel_n_baans_tc(input_vdp_posix_lijst, etiketten_Y, in_loop, mes):
             print("uitloop maken")
             target.writelines(readline[-etiketten_Y:])
 
-
-
 # print(VDP_final)
-
-
-
-
-
-
-
-
-
-

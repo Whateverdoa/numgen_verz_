@@ -6,6 +6,7 @@ import sys
 import mes_wikkel as mes_wik
 from paden import *
 from summary import html_sum_form_writer
+from rollen import rest_uitrekenen, rol_num_dikt, df_lege_csv_rol_builder_met_rolnummer
 
 
 
@@ -23,7 +24,7 @@ def main():
 
         [sg.Text('Nummer generator 2.0', text_color="Yellow")],
         [sg.Text('Ordernummer', size=(15, 1)), sg.InputText(key="order_number")],
-        [sg.Text("Aantal VDP's", size=(15, 1)), sg.InputText(key="aantal_vdps")],
+        [sg.Text("Aantal VDP's", size=(15, 1)), sg.InputText('werkt nog niet default = 1',key="aantal_vdps")],
 
         [sg.Text()],
         [sg.CalendarButton("Datum")],
@@ -159,17 +160,48 @@ def main():
                 print(beginnummer, filenaam, padnaam)
 
             # todo rest functie hier invoegen en extra rollen in tmp zetten (tel) aaltal files in map
+            hoeveelheid_rest_rollen = rest_uitrekenen(mes, totaal_aantal, aantal_per_rol)
+
+
+            if hoeveelheid_rest_rollen != 0:
+                print(f'dit is de hoeveelheid_rest_rollen: {hoeveelheid_rest_rollen}')
+                aantal_rollen = totaal_aantal//aantal_per_rol
+
+                rest_rollen_dikt = rol_num_dikt(1,vlg, hoeveelheid_rest_rollen,aantal_per_rol,aantal_rollen)
+                print(f"dit is de dikt restrollen: {rest_rollen_dikt}")
+
+                rest_gemaakte_posix_paden = []
+                count = aantal_rollen
+                for key in rest_rollen_dikt.items():
+                    rol_nummer = key[0]
+                    beginnummer = int(key[1])
+                    filenaam = f'tmp{count:>{0}{6}}.csv'
+                    padnaam = Path(path.joinpath(filenaam))
+                    # print(padnaam)
+                    rest_gemaakte_posix_paden.append(padnaam)
+
+                    df_lege_csv_rol_builder_met_rolnummer(beginnummer, posities, vlg, aantal_per_rol, wikkel, prefix,
+                                                             postfix, rol_nummer, veelvoud).to_csv(padnaam, index=0)
+                    count += 1
+
+            # voeg rest posix paden toe aan gemaakte posix paden
+            new_posix_lijst = gemaakte_posix_paden + rest_gemaakte_posix_paden
+            print(f'nieuwe lijsg ={new_posix_lijst}')
+
+
 
             print(f'posix_paden {gemaakte_posix_paden}')
             print(f'lengte map posix_paden {len(gemaakte_posix_paden)}')
 
 
             aantal_rollen = len(beginlijst)
-            print(f'aantal rollen {aantal_rollen}')
-            combinaties = aantal_rollen // mes
+            print(f'aantal rollen {aantal_rollen} + rest rollen: {hoeveelheid_rest_rollen//aantal_per_rol}')
+            rest_rollen_toevoegen = hoeveelheid_rest_rollen//aantal_per_rol
+            combinaties = (aantal_rollen + rest_rollen_toevoegen) // mes
+            print(f'combinaties = {combinaties}')
 
             csv_files_in_tmp = [x for x in os.listdir(path) if x.endswith(".csv")]
-            print(csv_files_in_tmp)
+            # print(csv_files_in_tmp)
             sorted_files = sorted(csv_files_in_tmp)
             print(f'sortedfiles {sorted_files}')
 
@@ -181,29 +213,34 @@ def main():
                 print(begin, eind)
 
                 combinatie_binnen_mes.append(sorted_files[begin:eind])
-                combinatie_binnen_mes_posix.append(gemaakte_posix_paden[begin:eind])
+                combinatie_binnen_mes_posix.append(new_posix_lijst[begin:eind])
 
                 begin += mes
                 eind += mes
 
 
-            teller=0
-            for lijst in combinatie_binnen_mes_posix:
+            teller = 0
 
+            for lijst in combinatie_binnen_mes_posix:
+                print(f'{mes} == mes')
                 print(lijst)
                 print(type(mes_wik.lees_per_lijst(lijst, mes)))
+
                 csv_naam = Path(path_vdp.joinpath(f'df_{teller:>{0}{4}}.csv'))
+                print(f'çsv naam{csv_naam}')
+
                 mes_wik.lees_per_lijst(lijst, mes).to_csv(csv_naam, ";", index=0)
-                teller+=1
+
+                teller += 1
 
             df_csv_files_in_tmp = [x for x in os.listdir(path_vdp) if x.endswith(".csv")]
             sorted_df_files = sorted(df_csv_files_in_tmp)
 
             mes_wik.stapel_df_baan(sorted_df_files, ordernummer)
 
-            VDP_final_files_in_tmp = [vdp for vdp in path_final.glob("*.csv") if vdp.is_file()]
+            vdp_final_files_in_tmp = [vdp for vdp in path_final.glob("*.csv") if vdp.is_file()]
 
-            sorted_csv_final_files = sorted(VDP_final_files_in_tmp)
+            sorted_csv_final_files = sorted(vdp_final_files_in_tmp)
 
             mes_wik.wikkel_n_baans_tc(sorted_csv_final_files, Y_waarde, inloop, mes)
 
