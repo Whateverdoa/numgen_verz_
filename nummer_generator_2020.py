@@ -185,8 +185,12 @@ def main():
                     count += 1
 
             # voeg rest posix paden toe aan gemaakte posix paden
-            new_posix_lijst = gemaakte_posix_paden + rest_gemaakte_posix_paden
-            print(f'nieuwe lijsg ={new_posix_lijst}')
+            if hoeveelheid_rest_rollen != 0:
+                new_posix_lijst = gemaakte_posix_paden + rest_gemaakte_posix_paden
+                print(f'nieuwe lijsg ={new_posix_lijst}')
+
+            else:
+                new_posix_lijst = gemaakte_posix_paden
 
 
 
